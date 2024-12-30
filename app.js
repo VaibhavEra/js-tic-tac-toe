@@ -27,6 +27,8 @@ const gameController = (function () {
 
   function checkWinCondition() {
     const grid = gameBoard.fetchGrid();
+
+    //check hz
     for (let i = 0; i < 9; i += 3) {
       if (grid[i] != "" && grid[i + 1] != "" && grid[i + 2] != "") {
         if (grid[i] == grid[i + 1] && grid[i + 1] == grid[i + 2]) {
@@ -36,6 +38,7 @@ const gameController = (function () {
       }
     }
 
+    //check vertical
     for (let i = 0; i < 3; i++) {
       if (grid[i] != "" && grid[i + 3] != "" && grid[i + 6] != "") {
         if (grid[i] == grid[i + 3] && grid[i + 3] == grid[i + 6]) {
@@ -44,6 +47,8 @@ const gameController = (function () {
         }
       }
     }
+
+    //check diagonal
     if (grid[0] != "" && grid[4] != "" && grid[8] != "") {
       if (grid[0] == grid[4] && grid[4] == grid[8]) {
         console.log("win");
