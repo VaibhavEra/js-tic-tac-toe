@@ -2,7 +2,7 @@ const gameBoard = (function () {
   const grid = ["", "", "", "", "", "", "", "", ""];
 
   const fetchGrid = () => grid;
-  const updateGrid = (choice, pos1) => (grid[pos1] = choice);
+  const updateGrid = (makeMove, positionIdx) => (grid[positionIdx] = makeMove);
 
   return { fetchGrid, updateGrid, grid };
 })();
@@ -10,12 +10,12 @@ const gameBoard = (function () {
 const gameController = (function () {
   //input player choice
   let symbolX = true;
-  const choice = (position1) => {
+  const makeMove = (positionIdx) => {
     if (symbolX) {
-      gameBoard.updateGrid("X", position1);
+      gameBoard.updateGrid("X", positionIdx);
       symbolX = false;
     } else {
-      gameBoard.updateGrid("O", position1);
+      gameBoard.updateGrid("O", positionIdx);
       symbolX = true;
     }
     let win = false;
@@ -26,16 +26,10 @@ const gameController = (function () {
   };
 
   function checkWinCondition() {
+    const grid = gameBoard.fetchGrid();
     for (let i = 0; i < 9; i += 3) {
-      if (
-        gameBoard.fetchGrid()[i] != "" &&
-        gameBoard.fetchGrid()[i + 1] != "" &&
-        gameBoard.fetchGrid()[i + 2] != ""
-      ) {
-        if (
-          gameBoard.fetchGrid()[i] == gameBoard.fetchGrid()[i + 1] &&
-          gameBoard.fetchGrid()[i + 1] == gameBoard.fetchGrid()[i + 2]
-        ) {
+      if (grid[i] != "" && grid[i + 1] != "" && grid[i + 2] != "") {
+        if (grid[i] == grid[i + 1] && grid[i + 1] == grid[i + 2]) {
           console.log("win");
           return true;
         }
@@ -43,41 +37,20 @@ const gameController = (function () {
     }
 
     for (let i = 0; i < 3; i++) {
-      if (
-        gameBoard.fetchGrid()[i] != "" &&
-        gameBoard.fetchGrid()[i + 3] != "" &&
-        gameBoard.fetchGrid()[i + 6] != ""
-      ) {
-        if (
-          gameBoard.fetchGrid()[i] == gameBoard.fetchGrid()[i + 3] &&
-          gameBoard.fetchGrid()[i + 3] == gameBoard.fetchGrid()[i + 6]
-        ) {
+      if (grid[i] != "" && grid[i + 3] != "" && grid[i + 6] != "") {
+        if (grid[i] == grid[i + 3] && grid[i + 3] == grid[i + 6]) {
           console.log("win");
           return true;
         }
       }
     }
-    if (
-      gameBoard.fetchGrid()[0] != "" &&
-      gameBoard.fetchGrid()[4] != "" &&
-      gameBoard.fetchGrid()[8] != ""
-    ) {
-      if (
-        gameBoard.fetchGrid()[0] == gameBoard.fetchGrid()[4] &&
-        gameBoard.fetchGrid()[4] == gameBoard.fetchGrid()[8]
-      ) {
+    if (grid[0] != "" && grid[4] != "" && grid[8] != "") {
+      if (grid[0] == grid[4] && grid[4] == grid[8]) {
         console.log("win");
         return true;
       }
-    } else if (
-      gameBoard.fetchGrid()[2] != "" &&
-      gameBoard.fetchGrid()[4] != "" &&
-      gameBoard.fetchGrid()[6] != ""
-    ) {
-      if (
-        gameBoard.fetchGrid()[2] == gameBoard.fetchGrid()[4] &&
-        gameBoard.fetchGrid()[4] == gameBoard.fetchGrid()[6]
-      ) {
+    } else if (grid[2] != "" && grid[4] != "" && grid[6] != "") {
+      if (grid[2] == grid[4] && grid[4] == grid[6]) {
         console.log("win");
         return true;
       }
@@ -88,7 +61,7 @@ const gameController = (function () {
   function checkTieCondition() {
     let tie = true;
     for (let i = 0; i < 9; i++) {
-      if (gameBoard.fetchGrid()[i] == "") {
+      if (grid[i] == "") {
         tie = false;
         break;
       }
@@ -98,13 +71,13 @@ const gameController = (function () {
     }
   }
 
-  return { choice };
+  return { makeMove };
 })();
 
 function createPlayer(name) {
   const displayName = "@" + name;
-  const { choice } = gameController;
-  return { displayName, choice };
+  const { makeMove } = gameController;
+  return { displayName, makeMove };
 }
 
 const bill = createPlayer("bill");
