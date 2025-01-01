@@ -18,45 +18,35 @@ const gameController = (function () {
       gameBoard.updateGrid("O", positionIdx);
       symbolX = true;
     }
+
+    //check win or tie condition after every move
     let win = false;
     win = checkWinCondition();
+
+    //check tie condition iff win there was no win
     if (!win) {
       checkTieCondition();
     }
   };
 
+  //caching grid.fetch
+  const grid = gameBoard.fetchGrid();
+
   function checkWinCondition() {
-    const grid = gameBoard.fetchGrid();
+    const winPatterns = [
+      [0, 1, 2], // Rows
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6], // Columns
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8], // Diagonals
+      [2, 4, 6],
+    ];
 
-    //check hz
-    for (let i = 0; i < 9; i += 3) {
-      if (grid[i] != "" && grid[i + 1] != "" && grid[i + 2] != "") {
-        if (grid[i] == grid[i + 1] && grid[i + 1] == grid[i + 2]) {
-          console.log("win");
-          return true;
-        }
-      }
-    }
-
-    //check vertical
-    for (let i = 0; i < 3; i++) {
-      if (grid[i] != "" && grid[i + 3] != "" && grid[i + 6] != "") {
-        if (grid[i] == grid[i + 3] && grid[i + 3] == grid[i + 6]) {
-          console.log("win");
-          return true;
-        }
-      }
-    }
-
-    //check diagonal
-    if (grid[0] != "" && grid[4] != "" && grid[8] != "") {
-      if (grid[0] == grid[4] && grid[4] == grid[8]) {
-        console.log("win");
-        return true;
-      }
-    } else if (grid[2] != "" && grid[4] != "" && grid[6] != "") {
-      if (grid[2] == grid[4] && grid[4] == grid[6]) {
-        console.log("win");
+    for (const [a, b, c] of winPatterns) {
+      if (grid[a] && grid[a] === grid[b] && grid[b] === grid[c]) {
+        console.log(`${grid[a]} Wins`);
         return true;
       }
     }
