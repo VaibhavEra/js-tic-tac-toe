@@ -4,11 +4,11 @@ const gameBoard = (function () {
   const fetchGrid = () => grid;
   const updateGrid = (makeMove, positionIdx) => (grid[positionIdx] = makeMove);
 
-  return { fetchGrid, updateGrid, grid };
+  return { fetchGrid, updateGrid };
 })();
 
 const gameController = (function () {
-  //input player choice
+  //make player choice
   let symbolX = true;
   const makeMove = (positionIdx) => {
     if (symbolX) {
@@ -19,17 +19,19 @@ const gameController = (function () {
       symbolX = true;
     }
 
+    // To render the display after every move
+    displayController.renderDisplay();
+
     //check win or tie condition after every move
     let win = false;
     win = checkWinCondition();
 
-    //check tie condition iff win there was no win
     if (!win) {
       checkTieCondition();
     }
   };
 
-  //caching grid.fetch
+  //caching fetchGrid
   const grid = gameBoard.fetchGrid();
 
   function checkWinCondition() {
@@ -69,11 +71,37 @@ const gameController = (function () {
   return { makeMove };
 })();
 
-function createPlayer(name) {
-  const displayName = "@" + name;
-  const { makeMove } = gameController;
-  return { displayName, makeMove };
-}
+// function createPlayer(name) {
+//   const displayName = "@" + name;
+//   const { makeMove } = gameController;
+//   return { displayName, makeMove };
+// }
 
-const bill = createPlayer("bill");
-const stan = createPlayer("stan");
+// const bill = createPlayer("bill");
+// const stan = createPlayer("stan");
+
+const displayController = (function () {
+  const cells = document.querySelectorAll(".cell");
+
+  // Cache fetchGrid
+  const grid = gameBoard.fetchGrid();
+
+  // makeMove at clicked cell
+  cells.forEach((cell, idx) => {
+    cell.addEventListener("click", () => {
+      if (grid[idx] == "") {
+        // only allow to click at empty cells
+        gameController.makeMove(idx);
+      }
+    });
+  });
+
+  // Render gameBoard on page
+  const renderDisplay = () => {
+    cells.forEach((cell, idx) => {
+      cell.textContent = grid[idx]; // Assign grid value to each cell
+    });
+  };
+
+  return { renderDisplay };
+})();
