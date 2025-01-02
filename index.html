@@ -9,10 +9,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
-    <title>Tic-Tac-Toe</title>
+    <title>Tic-Tac-Foot</title>
   </head>
   <body>
-    <h1 class="heading">Tic Tac Toe</h1>
+    <h1 class="heading">&checkmark; - &#x1F4CC; - {toe entity not found!}</h1>
+    <h2 class="playerName"></h2>
     <div class="game-board">
       <div class="cell"></div>
       <div class="cell"></div>
@@ -24,6 +25,30 @@
       <div class="cell"></div>
       <div class="cell"></div>
     </div>
+    <dialog id="dialog">
+      <form action="#" id="playerInput">
+        <fieldset>
+          <legend>Add Player Names</legend>
+          <input
+            type="text"
+            name="player1_name"
+            id="player1_name"
+            placeholder="Enter Player 1 name"
+            required
+            maxlength="100"
+          />
+          <input
+            type="text"
+            name="player2_name"
+            id="player2_name"
+            placeholder="Enter Player 2 name"
+            required
+            maxlength="100"
+          />
+          <button id="submit-btn">Submit</button>
+        </fieldset>
+      </form>
+    </dialog>
     <script src="app.js"></script>
   </body>
 </html>
