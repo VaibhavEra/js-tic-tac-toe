@@ -8,6 +8,7 @@ body {
   align-items: center;
   height: 100vh;
   color: #ebd3f8;
+  scale: 0.75;
 }
 
 .heading {
