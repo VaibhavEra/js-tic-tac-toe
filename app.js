@@ -8,15 +8,18 @@ const gameBoard = (function () {
 })();
 
 const gameController = (function () {
+  //caching fetchGrid
+  const grid = gameBoard.fetchGrid();
+
   //make player choice
-  let symbolX = true;
+  let firstMarker = true;
   const makeMove = (positionIdx) => {
-    if (symbolX) {
+    if (firstMarker) {
       gameBoard.updateGrid("X", positionIdx);
-      symbolX = false;
+      firstMarker = false;
     } else {
       gameBoard.updateGrid("O", positionIdx);
-      symbolX = true;
+      symbolfirstMarker = true;
     }
 
     // To render the display after every move
@@ -30,9 +33,6 @@ const gameController = (function () {
       checkTieCondition();
     }
   };
-
-  //caching fetchGrid
-  const grid = gameBoard.fetchGrid();
 
   function checkWinCondition() {
     const winPatterns = [
@@ -71,30 +71,29 @@ const gameController = (function () {
   return { makeMove };
 })();
 
-// function createPlayer(name) {
-//   const displayName = "@" + name;
-//   const { makeMove } = gameController;
-//   return { displayName, makeMove };
-// }
-
-// const bill = createPlayer("bill");
-// const stan = createPlayer("stan");
+function createPlayer(name) {
+  const displayName = () => {
+    "@" + name;
+  };
+  const { makeMove } = gameController;
+  return { displayName, makeMove };
+}
 
 const displayController = (function () {
   const cells = document.querySelectorAll(".cell");
+  const dialog = document.querySelector("#dialog");
+  const submit_btn = document.querySelector("#submit-btn");
+  const player1Name = document.querySelector("#player1_name");
+  const player2Name = document.querySelector("#player2_name");
+  const playerNameDiv = document.querySelector(".playerName");
 
   // Cache fetchGrid
   const grid = gameBoard.fetchGrid();
 
-  // makeMove at clicked cell
-  cells.forEach((cell, idx) => {
-    cell.addEventListener("click", () => {
-      if (grid[idx] == "") {
-        // only allow to click at empty cells
-        gameController.makeMove(idx);
-      }
-    });
-  });
+  function init() {
+    initDialog();
+    cellEventListener();
+  }
 
   // Render gameBoard on page
   const renderDisplay = () => {
@@ -103,5 +102,50 @@ const displayController = (function () {
     });
   };
 
-  return { renderDisplay };
+  function initDialog() {
+    dialog.showModal();
+
+    //to disable submit btn
+    submit_btn.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+      },
+      false
+    );
+
+    //to disable esc button
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+      }
+    });
+  }
+
+  function cellEventListener() {
+    //attach event listner to every cell for making a move on click
+    cells.forEach((cell, idx) => {
+      cell.addEventListener("click", () => {
+        if (grid[idx] == "") {
+          // only allow to click at empty cells
+          gameController.makeMove(idx);
+        }
+      });
+    });
+  }
+
+  submit_btn.addEventListener("click", () => {
+    const player1 = createPlayer(player1Name);
+    const player2 = createPlayer(player2Name);
+    renderPlayerName(player1.displayName());
+    dialog.close();
+  });
+
+  function renderPlayerName(name) {
+    playerNameDiv.textContent = `${name}`;
+  }
+
+  init();
+
+  return { renderDisplay, renderPlayerName };
 })();
